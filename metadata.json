@@ -1,0 +1,6 @@
+{
+  "name": "POS Ferretería de Aceros",
+  "description": "Punto de venta y control de inventario responsivo para ferreterías de aceros y perfiles.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
