@@ -3,6 +3,27 @@ const path = require('path');
 
 console.log('--- Iniciando fix-case para Vercel ---');
 
+function listFilesRecursive(dir, prefix = '') {
+  try {
+    const files = fs.readdirSync(dir);
+    for (const file of files) {
+      if (file === 'node_modules' || file === '.git') continue;
+      const fullPath = path.join(dir, file);
+      const isDir = fs.statSync(fullPath).isDirectory();
+      console.log(`${prefix}${file}${isDir ? '/' : ''}`);
+      if (isDir) {
+        listFilesRecursive(fullPath, prefix + '  ');
+      }
+    }
+  } catch (err) {
+    console.error('Error listando', dir, err.message);
+  }
+}
+
+console.log('--- Archivos detectados en la raíz de Vercel ---');
+listFilesRecursive('.');
+console.log('------------------------------------------------');
+
 try {
   // 1. Corregir capitalización de la carpeta "src" en la raíz
   const rootFiles = fs.readdirSync('.');
@@ -23,6 +44,7 @@ try {
   const targetSrc = srcDirName && srcDirName !== 'src' ? 'src' : (srcDirName || 'src');
   if (fs.existsSync(targetSrc)) {
     const srcFiles = fs.readdirSync(targetSrc);
+    // Busquemos cualquier archivo que empiece con main o Main
     const mainFile = srcFiles.find(f => f.toLowerCase() === 'main.tsx');
     if (mainFile && mainFile !== 'main.tsx') {
       console.log(`[FIX] Detectado archivo "${mainFile}" dentro de "${targetSrc}". Renombrando a "main.tsx"...`);
@@ -40,3 +62,4 @@ try {
 }
 
 console.log('--- Finalizado fix-case ---');
+
